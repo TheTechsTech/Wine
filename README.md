@@ -5,7 +5,7 @@ Wine 2.0.2 32bit and 64bit CentOs 7 image base on a script from https://www.syst
 ## Cross compile on Linux for Windows
 Using the ideas from http://sparkandshine.net/en/build-a-windows-executable-from-python-scripts-on-linux/  
 
-This container can automatically turn python scripts directly to windows executable by dropping *.py into a mounted watch folder, and *.exe will be in another mounted folder for the binary. 
+This container can automatically turn python scripts directly to windows executable by dropping *.py into a mounted watch folder, and *.exe will be in another mounted folder for the binary. This done by using by python script from https://github.com/joh/when-changed
 
 ### Usage
 To run it:
