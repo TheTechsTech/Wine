@@ -3,20 +3,16 @@ MAINTAINER Lawrence Stubbs <technoexpressnet@gmail.com>
 
 # Install Required Dependencies    
 RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
-	&& yum -y update && yum clean all \
-    && yum -y install curl unzip git vim wget which sudo 
+	&& yum -y install curl unzip git vim wget which sudo 
 	
 ENV DISPLAY :0
-COPY build-wine-i686-centos7.sh ./
-
+COPY build-wine-i686-centos7.sh /
 RUN chmod +x build-wine-i686-centos7.sh \
-    && ./build-wine-i686-centos7.sh \
-    && yum erase *-devel -y \
-    && rm -rf /usr/src/wine-2.0.2
+    && yum install -y https://iweb.dl.sourceforge.net/project/rpmerizor/2.10/rpmerizor-2.10-1.noarch.rpm 
 
-RUN wget -q -O rpmerizor-2.10-1.noarch.rpm 'https://downloads.sourceforge.net/project/rpmerizor/2.10/rpmerizor-2.10-1.noarch.rpm?r=&ts=1513207402&use_mirror=svwh' \
-    && yum install -y rpmerizor-2.10-1.noarch.rpm \
-    && rm -f rpmerizor-2.10-1.noarch.rpm 
+RUN ./build-wine-i686-centos7.sh \
+    && yum erase *-devel -y \
+    && rm -rf /usr/src/wine-2.0.2 
 
 COPY systemctl.py /usr/bin/systemctl.py    
 COPY py2exe.sh /usr/local/bin/py2exe
