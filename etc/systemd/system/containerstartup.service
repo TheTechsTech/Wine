@@ -1,0 +1,11 @@
+[Unit]
+Description=Start when-changed, watch folder, create *.exe from dropped *.py files
+After=yum-cron.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=no
+ExecStart=when-changed /opt/watch -c py2exe %f /opt/windows
+
+[Install]
+WantedBy=multi-user.target
