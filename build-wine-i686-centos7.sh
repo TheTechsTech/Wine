@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Download, build and install wine 32-bit on CentOS 7
 
 # For details of this script, please check
@@ -94,4 +93,3 @@ rm -f $log
 # make uninstall
 # cd /usr/src/wine-${ver}/wine64
 # make uninstall
-
