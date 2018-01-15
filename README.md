@@ -7,6 +7,8 @@ Using the ideas from http://sparkandshine.net/en/build-a-windows-executable-from
 
 This container can automatically turn python scripts directly to windows executable by dropping *.py into a mounted watch folder, and *.exe will be in another mounted folder for the binary. This done by using by python script from https://github.com/joh/when-changed
 
+For example howto on c++ and others see: http://ooo-imath.sourceforge.net/wiki/index.php/Cross-compiling_for_Windows
+
 ### Usage
 To run it:
 ```
