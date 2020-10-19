@@ -1,30 +1,28 @@
-FROM centos:7 
-MAINTAINER Lawrence Stubbs <technoexpressnet@gmail.com>
+FROM centos:7.8.2003
 
-# Install Required Dependencies    
+LABEL maintainer="technoexpressnet@gmail.com"
+
+# Install Required Dependencies
 RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
-	&& yum -y install curl unzip git vim wget which sudo 
-	
+	&& yum -y --enablerepo=epel install curl unzip git vim wget which sudo
+
 ENV DISPLAY :0
-COPY build-wine-i686-centos7.sh /
-RUN chmod +x /build-wine-i686-centos7.sh \
-    && yum install -y https://iweb.dl.sourceforge.net/project/rpmerizor/2.10/rpmerizor-2.10-1.noarch.rpm 
+RUN yum install -y wine \
+    && yum install -y https://iweb.dl.sourceforge.net/project/rpmerizor/2.10/rpmerizor-2.10-1.noarch.rpm
 
-RUN ./build-wine-i686-centos7.sh \
-    && yum erase *-devel -y \
-    && rm -rf /usr/src/wine-2.0.2 
-
-COPY systemctl.py /usr/bin/systemctl.py    
+# Fixes issue with running systemD inside docker builds
+# From https://github.com/gdraheim/docker-systemctl-replacement
+COPY systemctl.py /usr/bin/systemctl.py
 COPY py2exe.sh /usr/local/bin/py2exe
- 
+
 RUN cp -f /usr/bin/systemctl /usr/bin/systemctl.original \
     && chmod +x /usr/bin/systemctl.py \
     && chmod +x /usr/local/bin/py2exe \
-    && cp -f /usr/bin/systemctl.py /usr/bin/systemctl 
-    
-#From http://sparkandshine.net/en/build-a-windows-executable-from-python-scripts-on-linux/  
+    && cp -f /usr/bin/systemctl.py /usr/bin/systemctl
+
+#From http://sparkandshine.net/en/build-a-windows-executable-from-python-scripts-on-linux/
 RUN wget -q http://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe \
-	&& wine dotNetFx40_Full_x86_x64.exe /q /norestart 
+	&& wine dotNetFx40_Full_x86_x64.exe /q /norestart
 
 RUN wget -q https://www.python.org/ftp/python/2.7.14/python-2.7.14.amd64.msi \
     && wine msiexec /i python-2.7.14.amd64.msi /quiet /qn \
@@ -36,7 +34,7 @@ RUN wget -q https://www.python.org/ftp/python/2.7.14/python-2.7.14.amd64.msi \
     && wine python.exe Scripts/pip.exe install pyinstaller \
 	&& wine python.exe Scripts/pip.exe install pexpect \
 	&& wine python.exe Scripts/pip.exe install pycrypto
-    
+
 RUN yum -y install python2-pip python2-devel gcc \
     && pip install --upgrade pip \
     && pip install pyinstaller \
@@ -44,7 +42,7 @@ RUN yum -y install python2-pip python2-devel gcc \
     && pip install pycrypto \
     && pip install when-changed
 
-COPY make_wine_* ./   
+COPY make_wine_* ./
 COPY etc /etc/
 RUN yum install yum-cron yum-versionlock -y && yum versionlock systemd \
     && (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
