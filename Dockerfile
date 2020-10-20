@@ -31,6 +31,7 @@ RUN wget -q https://www.python.org/ftp/python/2.7.14/python-2.7.14.amd64.msi \
 	&& wine msiexec /i VCForPython27.msi /quiet /qn \
     && cd ~/.wine/drive_c/Python27 \
 	&& mkdir pyfor_exe \
+    && wine python.exe -m Scripts/pip.exe install --upgrade pip \
     && wine python.exe Scripts/pip.exe install --upgrade setuptools \
     && wine python.exe Scripts/pip.exe install pyinstaller \
 	&& wine python.exe Scripts/pip.exe install pexpect \
