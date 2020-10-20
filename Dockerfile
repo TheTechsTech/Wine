@@ -8,7 +8,8 @@ RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.
 
 ENV DISPLAY :0
 RUN yum install -y wine \
-    && yum install -y https://iweb.dl.sourceforge.net/project/rpmerizor/2.10/rpmerizor-2.10-1.noarch.rpm
+    && yum -y install https://harbottle.gitlab.io/wine32/7/i386/wine32-release.rpm \
+    && yum -y install wine.i686
 
 # Fixes issue with running systemD inside docker builds
 # From https://github.com/gdraheim/docker-systemctl-replacement
@@ -42,7 +43,6 @@ RUN yum -y install python2-pip python2-devel gcc \
     && pip install pycrypto \
     && pip install when-changed
 
-COPY make_wine_* ./
 COPY etc /etc/
 RUN yum install yum-cron yum-versionlock -y && yum versionlock systemd \
     && (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
@@ -57,9 +57,7 @@ RUN yum install yum-cron yum-versionlock -y && yum versionlock systemd \
     rm -f /etc/systemd/system/sockets.target.wants/*; \
 	systemctl.original enable yum-cron.service containerstartup.service
 
-RUN chmod +x make_wine_profile_rpm.sh \
-    && chmod +x make_wine_rpm.sh \
-	&& mkdir -p /opt/watch \
+RUN mkdir -p /opt/watch \
 	&& mkdir -p /opt/windows
 
 ENTRYPOINT ["/usr/bin/systemctl","default","--init"]
