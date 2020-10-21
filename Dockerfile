@@ -25,17 +25,15 @@ RUN cp -f /usr/bin/systemctl /usr/bin/systemctl.original \
 RUN wget -q http://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe \
 	&& wine dotNetFx40_Full_x86_x64.exe /q /norestart
 
-RUN wget -q https://www.python.org/ftp/python/3.2.5/python-3.2.5.amd64.msi \
-    && wine msiexec /i python-3.2.5.amd64.msi /quiet /qn \
+RUN wget -q https://www.python.org/ftp/python/2.7.18/python-2.7.18.amd64.msi \
+    && wine msiexec /i python-2.7.18.amd64.msi /quiet /qn \
     && wget -q https://download.microsoft.com/download/7/9/6/796EF2E4-801B-4FC4-AB28-B59FBF6D907B/VCForPython27.msi \
 	&& wine msiexec /i VCForPython27.msi /quiet /qn
 
-RUN cd ~/.wine/drive_c/\
-    && dir \
-    && cd Python32 \
+RUN cd ~/.wine/drive_c/Python27 \
 	&& mkdir pyfor_exe \
+    && wine python.exe -m Scripts/pip.exe install --upgrade pip \
     && wine python.exe Scripts/pip.exe install --upgrade setuptools \
-    && wine python.exe Scripts/pip.exe install --upgrade pip \
     && wine python.exe Scripts/pip.exe install pyinstaller \
 	&& wine python.exe Scripts/pip.exe install pexpect \
 	&& wine python.exe Scripts/pip.exe install pycrypto
