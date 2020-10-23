@@ -32,7 +32,7 @@ RUN wget -q https://www.python.org/ftp/python/2.7.18/python-2.7.18.amd64.msi \
 
 RUN cd ~/.wine/drive_c/Python27 \
 	&& mkdir pyfor_exe \
-    && wine python.exe Scripts/pip.exe install pyinstaller==2.0 \
+    && wine python.exe Scripts/pip.exe install pyinstaller==2.1 \
 	&& wine python.exe Scripts/pip.exe install pexpect \
 	&& wine python.exe Scripts/pip.exe install pycrypto
 
